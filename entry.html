@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ScreenLit — Mode</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .slModeWrap{ max-width:720px; margin:44px auto; padding:0 20px; }
+    .slModeCard{ border:1px solid var(--line); border-radius:12px; padding:18px; background:#fff; }
+    .slModeH{ font-size:18px; font-weight:600; margin:0 0 14px 0; }
+    .slModeRow{ margin:14px 0; }
+    .slModeBtn{
+      width:100%;
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+      cursor:pointer;
+      font-size:15px;
+      color: #111;
+    }
+    .slModeBtn:hover{ background: rgba(0,0,0,0.03); }
+    .slModeHint{ margin-top:8px; font-size:12px; color: var(--muted2); }
+    .slModeStatus{ margin-top:12px; font-size:12px; color: var(--muted2); }
+    .slMono{ font-family: ui-monospace, Menlo, Monaco, Consolas, monospace; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">ScreenLit</div>
+  </header>
+
+  <main class="main">
+    <div class="slModeWrap">
+      <div class="slModeCard">
+        <div class="slModeH">Mode</div>
+
+        <div class="slModeRow">
+          <button id="slGuestBtn" class="slModeBtn">Continue as guest</button>
+          <div class="slModeHint">Ephemeral. Stored only in this tab.</div>
+        </div>
+
+        <div class="slModeRow">
+          <button id="slSavedBtn" class="slModeBtn">Use saved profile</button>
+          <div class="slModeHint">Persistent. Uses an anonymous profile id on this device.</div>
+        </div>
+
+        <div id="slModeStatus" class="slModeStatus">—</div>
+
+        <div class="nav" style="margin-top:18px;">
+          <a class="navlink" href="index.html">Home</a>
+          <a class="navlink" href="discover.html">Discover</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="storage.js"></script>
+  <script src="entry.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+[ScreenLit] graph seed report 20260206_230916
+catalog_items=173
+candidate_pairs=6
+ambiguous_groups_skipped=0
+
+first_50_candidates:
+  big little lies :: tv_big_little_lies_2017 <-> book_big_little_lies_2014
+  dune :: film_dune_2021 <-> book_dune_1965
+  jurassic park :: film_jurassic_park_1993 <-> book_jurassic_park_1990
+  normal people :: tv_normal_people_2020 <-> book_normal_people_2018
+  the godfather :: film_godfather_1972 <-> book_godfather_1969
+  the handmaid’s tale :: tv_handmaids_tale_2017 <-> book_handmaids_tale_1985

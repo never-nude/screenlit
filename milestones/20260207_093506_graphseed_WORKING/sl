@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PORT="${SL_PORT:-8147}"
+
+PIDFILE="$ROOT/tools/.server_${PORT}.pid"
+LOGFILE="$ROOT/tools/.server_${PORT}.log"
+
+say() { echo "[ScreenLit] $*"; }
+die() { echo "[ScreenLit] ERROR: $*" >&2; exit 1; }
+
+kill_port() {
+  # Kill whatever is bound to the port.
+  lsof -ti :"$PORT" 2>/dev/null | xargs kill 2>/dev/null || true
+
+  # Also kill PIDFILE process if present (belt + suspenders).
+  if [[ -f "$PIDFILE" ]]; then
+    pid="$(cat "$PIDFILE" 2>/dev/null || true)"
+    if [[ -n "${pid:-}" ]]; then kill "$pid" 2>/dev/null || true; fi
+    rm -f "$PIDFILE" || true
+  fi
+}
+
+check() {
+  curl -Is "http://localhost:${PORT}/index.html" | head -n 1 || true
+}
+
+cmd="${1:-help}"
+shift || true
+
+case "$cmd" in
+  help)
+    cat <<EOF
+Usage: tools/sl <command>
+
+Commands:
+  up        Kill :$PORT, start server (background), print open commands
+  down      Kill :$PORT and remove pidfile
+  status    Show root/port + HTTP check line
+  open      Open pages: tools/sl open index|discover|entry
+EOF
+    ;;
+  up)
+    kill_port
+    cd "$ROOT"
+    nohup python3 -m http.server "$PORT" --bind 127.0.0.1 >"$LOGFILE" 2>&1 &
+    pid=$!
+    echo "$pid" >"$PIDFILE"
+    sleep 0.2
+    say "root=$ROOT"
+    say "port=$PORT pid=$pid"
+    say "check=$(check)"
+    say "open index:   open \"http://localhost:${PORT}/index.html?ts=$(date +%s)\""
+    say "open discover: open \"http://localhost:${PORT}/discover.html?ts=$(date +%s)\""
+    say "open entry:   open \"http://localhost:${PORT}/entry.html?ts=$(date +%s)\""
+    ;;
+  down)
+    kill_port
+    say "down (port :$PORT cleared)"
+    ;;
+  status)
+    say "root=$ROOT"
+    say "port=$PORT"
+    say "check=$(check)"
+    ;;
+  open)
+    page="${1:-}"
+    [[ -n "$page" ]] || die "missing page: index|discover|entry"
+    case "$page" in
+      index)   open "http://localhost:${PORT}/index.html?ts=$(date +%s)" ;;
+      discover) open "http://localhost:${PORT}/discover.html?ts=$(date +%s)" ;;
+      entry)   open "http://localhost:${PORT}/entry.html?ts=$(date +%s)" ;;
+      *) die "unknown page: $page" ;;
+    esac
+    ;;
+  *)
+    die "unknown command: $cmd (try: tools/sl help)"
+    ;;
+esac

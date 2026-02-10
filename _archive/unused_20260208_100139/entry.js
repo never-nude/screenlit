@@ -1,0 +1,1 @@
+/* ScreenLit legacy gate DISABLED. Entry screens removed. */

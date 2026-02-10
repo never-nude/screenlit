@@ -1,0 +1,9 @@
+{
+  "pool_total": 1784,
+  "active_total": 300,
+  "active_breakdown": {
+    "Film": 110,
+    "TV": 100,
+    "Book": 90
+  }
+}

@@ -1,0 +1,258 @@
+:root{
+  --ink:#111;
+  --muted:#666;
+  --muted2:#888;
+  --line:#ddd;
+  --bg:#fff;
+
+  --gold:#d8b11e;
+  --infer:#111;      /* near-black for inferred */
+  --outline:#bdbdbd; /* star outline */
+  --hover:#777;      /* index hover outline emphasis */
+  --fadeSide:0.35;
+
+  --tilePad:16px;
+  --tileMinH:170px;
+  --gap:18px;
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  padding:32px;
+  background:var(--bg);
+  color:var(--ink);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.header{
+  margin-bottom:18px;
+}
+.brand{
+  font-size:30px;
+  font-weight:600;
+  line-height:1.1;
+}
+.brandSub{
+  font-weight:400;
+  color:var(--muted);
+}
+.subtitle{
+  margin-top:6px;
+  font-size:14px;
+  color:var(--muted);
+}
+
+.main{ max-width: 980px; }
+
+.nav{
+  margin-top:22px;
+}
+.navlink{
+  color:var(--muted);
+  text-decoration:none;
+  font-size:14px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap);
+}
+
+.conveyor{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap);
+  align-items:stretch;
+}
+
+.slot{
+  opacity:1;
+}
+.slot.left, .slot.right{
+  opacity: var(--fadeSide);
+}
+.slot .tile{
+  height:100%;
+}
+
+.tile{
+  position:relative;
+  border:1px solid var(--line);
+  padding: var(--tilePad);
+  min-height: var(--tileMinH);
+  transition: opacity 180ms linear;
+  background: #fff;
+}
+
+.tile.fadeOut{ opacity:0; }
+
+.tileTitle{
+  font-size:16px;
+  font-weight:600;
+  margin-bottom:4px;
+}
+.tileMeta{
+  font-size:12px;
+  color:var(--muted2);
+  margin-bottom:10px;
+}
+
+.starsRow{
+  display:flex;
+  gap:6px;
+  margin-bottom:16px;
+  user-select:none;
+}
+
+/* SVG star button */
+.starBtn{
+  width:20px;
+  height:20px;
+  padding:0;
+  border:none;
+  background:none;
+  cursor:pointer;
+  display:inline-flex;
+}
+.starBtn[aria-disabled="true"]{
+  cursor:default;
+}
+
+/* outline always visible; fill controlled by JS via clip width */
+.starOutline{
+  stroke: var(--outline);
+  stroke-width:1.6;
+  fill: none;
+}
+.starOutline.hoverEmph{
+  stroke: var(--hover);
+}
+
+.starFillInfer{
+  fill: var(--infer);
+}
+.starFillGold{
+  fill: var(--gold);
+}
+
+/* icon triad (same layout on Index and Discover) */
+.triad{
+  position:absolute;
+  left:12px;
+  right:12px;
+  bottom:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.icon{
+  position:relative;
+  cursor:pointer;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1;
+  padding:2px 4px;
+  user-select:none;
+}
+
+.icon[aria-disabled="true"]{
+  cursor:default;
+  opacity:0.65;
+}
+
+.iconLabel{
+  position:absolute;
+  bottom:120%;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:11px;
+  color:var(--muted);
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+}
+.icon:hover .iconLabel{ opacity:1; }
+
+/* empty left slot on Discover */
+.tileEmpty{
+  border:1px dashed #eee;
+  color:#bbb;
+}
+
+/* Prevent default focus ring ugliness while still accessible */
+.starBtn:focus-visible, .icon:focus-visible, .navlink:focus-visible{
+  outline:2px solid #bbb;
+  outline-offset:2px;
+}
+/* ---- Discover empty state (gentle fallback) ---- */
+.empty-discover {
+  text-align: center;
+  opacity: 0.6;
+  padding: 2rem;
+}
+.empty-discover .title {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+.empty-discover .subtitle {
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.empty-discover .hint {
+  font-size: 0.85rem;
+}
+/* ---------------------------------------------- */
+
+/* ---- Aggregate (Discover) ---- */
+.aggCount{
+  margin-left: 10px;
+  color: var(--muted2);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+/* -------------------------------- */
+
+/* ---- Entry Gate (guest vs saved) ---- */
+.entryGate{
+  position:fixed;
+  inset:0;
+  background:var(--bg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  opacity:0;
+  transition: opacity 180ms linear;
+}
+.entryGate.show{ opacity:1; }
+.entryGate.hide{ opacity:0; }
+
+.entryPanel{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.entryBtn{
+  background:none;
+  border:1px solid var(--line);
+  padding:10px 14px;
+  color:var(--muted);
+  font-size:14px;
+  cursor:pointer;
+}
+.entryBtn:hover{
+  color:var(--ink);
+  border-color:#cfcfcf;
+}
+.entryBtn:focus-visible{
+  outline:2px solid #bbb;
+  outline-offset:2px;
+}
+/* ------------------------------------- */
+

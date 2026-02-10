@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+PORT="${SL_PORT:-8147}"
+CMD="${1:-}"
+
+cd "$ROOT"
+
+case "$CMD" in
+  up)
+    lsof -ti tcp:"$PORT" | xargs kill -9 2>/dev/null || true
+    nohup python3 -m http.server "$PORT" --bind 127.0.0.1 > .server.log 2>&1 &
+    echo $! > .server.pid
+    sleep 0.2
+    if command -v curl >/dev/null 2>&1; then
+      echo -n "[sl] check: "
+      curl -I "http://127.0.0.1:$PORT/index.html" 2>/dev/null | head -n 1 || true
+    fi
+    echo "[sl] up: http://127.0.0.1:$PORT"
+    ;;
+
+  down)
+    if [ -f .server.pid ]; then
+      PID="$(cat .server.pid 2>/dev/null || true)"
+      [ -n "$PID" ] && kill -9 "$PID" 2>/dev/null || true
+      rm -f .server.pid
+    fi
+    lsof -ti tcp:"$PORT" | xargs kill -9 2>/dev/null || true
+    echo "[sl] down"
+    ;;
+
+  open)
+    TS=$(date +%s)
+    open "http://127.0.0.1:$PORT/index.html?ts=$TS"
+    open "http://127.0.0.1:$PORT/discover.html?ts=$TS"
+    echo "[sl] opened index + discover"
+    ;;
+
+  doctor)
+    "$ROOT/tools/doctor.sh"
+    ;;
+
+  freeze)
+    ts=$(date +%Y%m%d_%H%M%S)
+    base=$(basename "$ROOT")
+    parent=$(dirname "$ROOT")
+    cd "$parent"
+    cp -R "$base" "${base}_FREEZE_${ts}"
+    zip -r "${base}_FREEZE_${ts}.zip" "${base}_FREEZE_${ts}" -x '*.DS_Store'
+    echo "[sl] froze: $parent/${base}_FREEZE_${ts}.zip"
+    ;;
+
+  *)
+    echo "Usage: $0 {up|down|open|doctor|freeze}"
+    echo "Env: SL_PORT=8147 $0 up"
+    exit 1
+    ;;
+esac

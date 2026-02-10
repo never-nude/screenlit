@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ScreenLit Discover</title>
+  <link rel="stylesheet" href="styles.css?v=clean_discover_1" />
+  <style id="slFooterKill">
+    /* Hard rule: footer contains ONLY Home (left) and Mode (right). */
+    #slFooterNuke{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      width:100%;
+    }
+    /* Hide any injected/accidental footer children beyond the two anchors. */
+    #slFooterNuke > :not(#slHome):not(#slMode){
+      display:none !important;
+    }
+    /* If a script injects pseudo-elements, kill them too. */
+    #slFooterNuke *::before,
+    #slFooterNuke *::after{
+      content:none !important;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">ScreenLit <span class="brandSub">Discover</span></div>
+  </header>
+
+  <main class="main">
+    <div id="conveyor" class="conveyor" aria-label="Discover conveyor"></div>
+
+    <div class="nav" id="slFooterNuke">
+      <a class="navlink" id="slHome" href="index.html">Home</a>
+      <a class="navlink" id="slMode" href="entry.html?return=discover">Mode</a>
+    </div>
+  </main>
+
+  <script src="globals.js"></script>
+  <script src="catalog.js?v=clean_discover_1"></script>
+  <script src="storage.js?v=clean_discover_1"></script>
+  <script src="mode_sync.js"></script>
+  <script src="pools.js?v=clean_discover_1"></script>
+  <script src="graph_seed.js?v=clean_discover_1"></script>
+  <script src="graph.js?v=clean_discover_1"></script>
+  <script src="discover.js?v=clean_discover_1"></script>
+  <script src="wormhole.js?v=clean_discover_1"></script>
+  <script src="backend_hook.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+.DS_Store
+backups/
+*.bak_*
+*.bak
+*.zip
+
+# local servers
+.server.pid
+.server.log
+tools/.server.pid
+tools/.server.log
+tools/.api_*.log
+tools/.api_*.pid
+
+# local DB
+screenlit.db
+*.db
